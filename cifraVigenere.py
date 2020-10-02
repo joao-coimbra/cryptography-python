@@ -19,12 +19,12 @@ while True:
         print('\nEscolha inválida\n')
 
 # define phrase
-phrase = input(f'\nDigite a frase que deseja (não coloque espaços nem números) {choice}\n-> ').lower()
+phrase = input(f'\nDigite a frase que deseja {choice}\n-> ').lower()
 
 # define keyword
 error = False
 while True:
-    keyword = input(f'\nDigite a palavra-chave que deseja (não coloque espaços nem números)\n-> ').lower()
+    keyword = input(f'\nDigite a palavra-chave que deseja [não coloque espaços nem números]\n-> ').lower()
     
     for i in range(len(keyword)):
         try:
