@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
 from cryptography import CipherMachine
+import utilities as ut
 
 class Application:
     def __init__(self, master=None):
@@ -36,6 +37,16 @@ class Application:
         self.sextoContainer['pady'] = 20
         self.sextoContainer.pack()
 
+        #Sétimo Container
+        self.setimoContainer = Frame(master)
+        self.setimoContainer['pady'] = 20
+        self.setimoContainer.pack()
+
+        #Oitavo Container
+        self.oitavoContainer = Frame(master)
+        self.oitavoContainer['pady'] = 20
+        self.oitavoContainer.pack()
+
         #1º container tem a informação do título
         self.titulo = Label(self.primeiroContainer, text='TERMINAL DE CRIPTOGRAFIA')
         self.titulo['font'] = ('arial','10','bold')
@@ -60,75 +71,77 @@ class Application:
         #self.senha["show"] = "*"
         self.senha.pack(side=LEFT)
 
-        #4º container contém botão de ação (Button)        
-        self.cesar = Radiobutton(self.quartoContainer)
-        self.cesar["text"] = "Cifra de Cesar"
-        self.cesar["font"] = ("Calibri", "8")
-        self.cesar["width"] = 12
-        self.cesar["command"] = self.clickCesar
-        self.cesar["value"] = 0
-        self.cesar.pack(side=LEFT)
+        #4º container contém botão para escolher o método de criptografia           
+        valor_a = IntVar()
+        self.button1 = Radiobutton(self.quartoContainer, text='Cifra de Cesar', variable=valor_a, width=12, value=1, command=self.clickCesar)
+        self.button2 = Radiobutton(self.quartoContainer, text='Cifra de Vigenère', variable=valor_a, width=12, value=2, command=self.clickVig)
+        self.button3 = Radiobutton(self.quartoContainer, text='RSA', variable=valor_a, width=12, value=3, command=self.clickRsa)
+        self.button1.pack(side=LEFT)
+        self.button2.pack(side=LEFT)
+        self.button3.pack(side=LEFT)   
 
-        self.vig = Radiobutton(self.quartoContainer)        
-        self.vig["text"] = "Cifra de Vigenère"        
-        self.vig["font"] = ("Calibri", "8")
-        self.vig["width"] = 12
-        #self.vig["command"] = self.clickVig
-        self.vig["value"] = 1
-        self.vig.pack(side=LEFT)
-
-        self.rsa = Radiobutton(self.quartoContainer)
-        self.rsa["text"] = "RSA"
-        self.rsa["font"] = ("Calibri", "8")
-        self.rsa["width"] = 12
-        #self.rsa["command"] = self.verificaSenha
-        self.rsa["value"] = 2
-        self.rsa.pack(side=LEFT)
-
-        #5º Container
-        # self.lblIncrementoCesar = Label(self.quintoContainer, text="Deslocamento", font=self.fontePadrao)
-        # self.lblIncrementoCesar.pack(side=LEFT)
-        # self.incrementoCesar = Entry(self.quintoContainer)
-        # self.incrementoCesar["width"] = 30
-        # self.incrementoCesar["font"] = self.fontePadrao        
-        # self.incrementoCesar.pack(side=LEFT)
-
-        self.labelPasse = Label(self.quintoContainer, text="Palavra-Chave", font=self.fontePadrao)        
+        #5º Container permite digitar o deslocamento/palavra-chave
+        self.labelPasse = Label(self.quintoContainer, text="Deslocamento: ", font=self.fontePadrao)        
         self.labelPasse.pack(side=LEFT)
         self.palavraPasse = Entry(self.quintoContainer)
         self.palavraPasse["width"] = 30
         self.palavraPasse["font"] = self.fontePadrao               
         self.palavraPasse.pack(side=LEFT)
 
-        #6º Container exibe a mensagem cifrada
-        self.mensagem = Label(self.sextoContainer, text="", font=self.fontePadrao)
+        #6º Container exibe botões para criptografar ou descriptografar
+        self.cripto = Button(self.sextoContainer)
+        self.cripto["text"] = "CRIPTOGRAFAR"
+        self.cripto["font"] = ("Calibri","8","bold")
+        self.cripto["width"] = 16
+        #self.cripto["command"] = self.criptografar
+        self.cripto.pack(side=LEFT)
+        
+        self.descripto = Button(self.sextoContainer)
+        self.descripto["text"] = "DESCRIPTOGRAFAR"
+        self.descripto["font"] = ("Calibri","8","bold")
+        self.descripto["width"] = 16
+        #self.descripto["command"] = self.decript
+        self.descripto.pack(side=LEFT)        
+
+        #7º Container exibe a mensagem cifrada
+        msg = StringVar()
+        msg = 'felipe'
+        self.mensagem = Label(self.setimoContainer, text=msg, font=self.fontePadrao)
         self.mensagem.pack()
 
-        self.abrirArquivo = Button(self.sextoContainer)
-        self.abrirArquivo["text"] = "Escolha o Arquivo"
+        #8º Container exibe botões para salvamento
+        self.abrirArquivo = Button(self.oitavoContainer)
+        self.abrirArquivo["text"] = "UPLOAD"
         self.abrirArquivo["font"] = ("Calibri","8","bold")
         self.abrirArquivo["width"] = 12
         self.abrirArquivo["command"] = self.openFile
         self.abrirArquivo.pack(side=LEFT)
         
-        self.salvar = Button(self.sextoContainer)
-        self.salvar["text"] = "Salvar a Cripto"
+        self.salvar = Button(self.oitavoContainer)
+        self.salvar["text"] = "SALVAR"
         self.salvar["font"] = ("Calibri","8","bold")
         self.salvar["width"] = 12
         self.salvar["command"] = self.save
         self.salvar.pack(side=LEFT)
 
-        self.limpar = Button(self.sextoContainer)
-        self.limpar["text"] = "Limpar"
+        self.limpar = Button(self.oitavoContainer)
+        self.limpar["text"] = "LIMPAR"
         self.limpar["font"] = ("calibri","8","bold")
         self.limpar['width'] = 12        
         #self.limpar['command'] = self.apagar
         self.limpar.pack(side=RIGHT)
 
     #Método salvar criptografia
-    def save(self):       
+    def save(self):
+        senha = self.senha.get()
+        mensagem = self.mensagem['text']           
         name = filedialog.asksaveasfile(mode='w', defaultextension=".txt", title="Salve o arquivo criptografado")
+        
+        if name:
+            name.write(f'A senha informada é: {senha} \n')
+            name.write(f'A criptografia ou descriptografia é: {mensagem}')            
         print(name)
+        print(senha)        
 
     #Método abrir arquivo para criptografar
     def openFile(self):
@@ -136,33 +149,27 @@ class Application:
         print(arquivo)
 
     def clickCesar(self):        
-        self.lblIncrementoCesar = Label(self.quintoContainer, text="Deslocamento", font=self.fontePadrao)
-        self.lblIncrementoCesar.pack(side=LEFT)
-
-        self.incrementoCesar = Entry(self.quintoContainer)
-        self.incrementoCesar["width"] = 30
-        self.incrementoCesar["font"] = self.fontePadrao        
-        self.incrementoCesar.pack(side=LEFT)
-
-        self.labelPasse.pack_forget()
-        self.palavraPasse.pack_forget()        
-        
-    #     self.incrementoCesar.wait_visibility()
+        if self.button1.select:
+            self.labelPasse["text"] = "Deslocamento: "
+            self.palavraPasse['state'] = NORMAL
 
     def clickVig(self):
-        self.labelPasse = Label(self.quintoContainer, text="Palavra-Chave", font=self.fontePadrao)
-        self.labelPasse.pack(side=LEFT)
+       if self.button2.select:
+            self.labelPasse["text"] = "Palavra-Chave"
+            self.palavraPasse['state'] = NORMAL
+        
+    def clickRsa(self):
+        if self.button3.select:
+            self.labelPasse["text"] = ""
+            self.palavraPasse['state'] = DISABLED
 
-        self.palavraPasse = Entry(self.quintoContainer)
-        self.palavraPasse["width"] = 30
-        self.palavraPasse["font"] = self.fontePadrao        
-        self.palavraPasse.pack(side=LEFT)
-        self.lblIncrementoCesar.destroy()
-        self.incrementoCesar.destroy()
-   
+    # def criptografar(self):
+    #     senha = self.senha.get()
+    #     parametro = self.palavraPasse.get()
         
-   
-        
+    #     if self.button1.select:
+    #         cifraCesar = CipherMachine.cesar(senha, parametro)
+    #         self.mensagem['text'] = cifraCesar
 
 root = Tk()
 Application(root)
