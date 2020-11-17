@@ -1,5 +1,9 @@
 alphabet = list(map(chr, range(97, 123)))
 
+simpleCharacters = alphabet
+simpleCharacters.append(' ')
+numbers = range(10)
+
 def removeSpecialCharacters(phrase, result = ''):
   for c in phrase:
     if c == 'ã' or c == 'á' or c == 'à' or c == 'â' or c == 'ä':
@@ -17,3 +21,8 @@ def removeSpecialCharacters(phrase, result = ''):
     else:
       result += c
   return result
+
+def mdc(a, b):
+  while b:
+    a, b = b, a % b
+  return a
