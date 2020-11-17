@@ -35,7 +35,7 @@ class CipherMachine:
 
     def parameter():
       while True:
-        try:
+        try:          
           parameter = int(input('\nEscolha o parâmetro que será utilizado [1-25]:\n-> '))
           if 1 <= parameter <= 25:
             break

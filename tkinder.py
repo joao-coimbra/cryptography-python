@@ -48,7 +48,7 @@ class Application:
         self.oitavoContainer.pack()
 
         #1º container tem a informação do título
-        self.titulo = Label(self.primeiroContainer, text='TERMINAL DE CRIPTOGRAFIA')
+        self.titulo = Label(self.primeiroContainer, text='GOVERNO BRASILEIRO \n TERMINAL DE CRIPTOGRAFIA')
         self.titulo['font'] = ('arial','10','bold')
         self.titulo.pack()
 
@@ -89,19 +89,28 @@ class Application:
         self.palavraPasse.pack(side=LEFT)
 
         #6º Container exibe botões para criptografar ou descriptografar
-        self.cripto = Button(self.sextoContainer)
-        self.cripto["text"] = "CRIPTOGRAFAR"
-        self.cripto["font"] = ("Calibri","8","bold")
-        self.cripto["width"] = 16
-        #self.cripto["command"] = self.criptografar
-        self.cripto.pack(side=LEFT)
+        # self.cripto = Button(self.sextoContainer)
+        # self.cripto["text"] = "CRIPTOGRAFAR"
+        # self.cripto["font"] = ("Calibri","8","bold")
+        # self.cripto["width"] = 16
+        # self.cripto["command"] = self.criptografar
+        # self.cripto.pack(side=LEFT)
         
-        self.descripto = Button(self.sextoContainer)
-        self.descripto["text"] = "DESCRIPTOGRAFAR"
-        self.descripto["font"] = ("Calibri","8","bold")
-        self.descripto["width"] = 16
-        #self.descripto["command"] = self.decript
-        self.descripto.pack(side=LEFT)        
+        # self.descripto = Button(self.sextoContainer)
+        # self.descripto["text"] = "DESCRIPTOGRAFAR"
+        # self.descripto["font"] = ("Calibri","8","bold")
+        # self.descripto["width"] = 16
+        # #self.descripto["command"] = self.decript
+        # self.descripto.pack(side=LEFT)   
+
+        valor_b = IntVar()
+        self.cript1 = Radiobutton(self.sextoContainer, text='Criptografar', variable=valor_b, width=12, value=1)
+        self.cript2 = Radiobutton(self.sextoContainer, text='Descriptografar', variable=valor_b, width=12, value=2)        
+        self.cript1.pack()
+        self.cript2.pack()
+        self.executar = Button(self.sextoContainer, text='Executar', font='bold', width=16, command=self.criptografar)
+        self.executar.pack(side=BOTTOM)
+             
 
         #7º Container exibe a mensagem cifrada
         msg = StringVar()
@@ -163,13 +172,26 @@ class Application:
             self.labelPasse["text"] = ""
             self.palavraPasse['state'] = DISABLED
 
-    # def criptografar(self):
-    #     senha = self.senha.get()
-    #     parametro = self.palavraPasse.get()
+    def criptografar(self):
+        # self.choice = 'c'        
+        obj = CipherMachine()
+
+        self.phrase = str(self.senha.get())
+        self.parametro = int(self.palavraPasse.get())
+        phrase = ut.removeSpecialCharacters(self.phrase)
+        phrase.lower()        
+        # CipherMachine.defineEncryptType(self.choice)
+        obj.phrase = phrase
         
-    #     if self.button1.select:
-    #         cifraCesar = CipherMachine.cesar(senha, parametro)
-    #         self.mensagem['text'] = cifraCesar
+        # CipherMachine.defineText(phrase)
+        # CipherMachine.defineEncryptType(choice)
+
+        if self.button1.select:
+            if self.cript1.select:
+                obj.encryptType = 'c'
+
+                self.mensagem['text'] = 'cifraCesar'
+
 
 root = Tk()
 Application(root)
